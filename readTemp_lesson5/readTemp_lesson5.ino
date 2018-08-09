@@ -21,7 +21,7 @@
 
 // Here we define our pin numbers as global variables
 int temperaturePin = A0; 
-int fanPin = 4;
+int fanPin = 4; // we use a digital pin to turn on/off the fan
 
 
 
@@ -67,10 +67,6 @@ void loop() {
    if(fanState){
     fanString = "On";
     }
-
-
-  
-  
 
   Serial.print("Temperature = ");
   Serial.print(temperature_C);
