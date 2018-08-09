@@ -38,6 +38,7 @@ void loop() {
   Serial.write(0xC2);
   Serial.write(0xB0);
   Serial.print("C ");
+  Serial.println();
   
 //  Serial.print("Thermistor = ");
 //  Serial.print(temperature_resistance_ohms);
@@ -69,7 +70,7 @@ int read_temp_avg(int pin, int samples){
 
 float calculate_resistance(int temp_analog, float series_resistance_ohms, float V_in){
     
-    float temp_voltage = (5/1023)*(float)temp_analog;
+    float temp_voltage = 0.004887586*(float)temp_analog;
 
     float temp_resistance = (series_resistance_ohms*temp_voltage)/(V_in-temp_voltage);
 
