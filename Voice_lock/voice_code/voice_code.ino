@@ -69,7 +69,7 @@ void loop() {
           }
         }
         Serial.println("Finished Recording.");
-        
+        Serial.println();
         normalize_vector(samples_check, BUFFER_SIZE);
 
         get_correlation();
@@ -83,6 +83,7 @@ void loop() {
         else{
           Serial.println("INTRUDER!!!");
         }
+        Serial.println();
 //        Serial.print("Correlation: ");
 //        Serial.println(xcor_max);
 //        Serial.print("check = [");
@@ -122,6 +123,7 @@ if (!digitalRead(recButton))
           }
         }
         Serial.println("Finished Recording.");
+        Serial.println();
         
         normalize_vector(samples_rec, BUFFER_SIZE);
         
