@@ -2,6 +2,15 @@
  * Part of series:
  * Introduction to Arduino for Scientists
  * Developed by Dr. Paul Leary, and Dr. Natalie Low
+
+
+  Lesson 4 - Calculating a useful temperature reading  from the  sensor's electrical property (resistance)
+
+  We have successfully converted the digital values from the ADC to an actual physical property of the 
+  thermistor (resistance). Now we want to convert the thermistor's resistance to a temperature (which is the 
+  environmental property we actually care about!)
+ 
+ * 
  */
 
 int temperaturePin = A0; 
@@ -31,8 +40,7 @@ void loop() {
 
    float temperature_C = calculate_temperature_C(temperature_resistance_ohms);
 
-
-
+  // Print the temperature to the serial monitor so we can see it
   Serial.print("Temperature = ");
   Serial.print(temperature_C);
   Serial.write(0xC2);
@@ -40,16 +48,12 @@ void loop() {
   Serial.print("C ");
   Serial.println();
   
-//  Serial.print("Thermistor = ");
-//  Serial.print(temperature_resistance_ohms);
-//  Serial.print(" ohms");
-//  Serial.println();
-  
   delay(500);
 
 }
 
-//FUNCTION declaration has form: RETURN TYPE  function_name((TYPE) INPUT ARGUMENTS)
+// These are the functions used in the loop() block
+// FUNCTION declaration has form: RETURN TYPE  function_name((TYPE) INPUT ARGUMENTS)
 
 int read_temp_avg(int pin, int samples){
 
@@ -69,20 +73,27 @@ int read_temp_avg(int pin, int samples){
 
 
 float calculate_resistance(int temp_analog, float series_resistance_ohms, float V_in){
+  
+    //This function takes as INPUT ARGUMENTS the digital value from the ADC (here, we will use the averaged value from our burst sample)
+    // As well as the resistance value of the fixed resistor R1, and the voltage across the entire voltage divider circuit
+
+    // Here we calculate the ADC pin voltage from the digital value we have.
     
     float temp_voltage = 0.004887586*(float)temp_analog;
 
-    float temp_resistance = (series_resistance_ohms*temp_voltage)/(V_in-temp_voltage);
+    // Now we calculate the resistance of the thermistor
 
-  // float temp_resistance = (resolution_conversion*series_resistance_ohms*(float)temp_analog)/(V_in-(resolution_conversion*(float)temp_analog));
+    float temp_resistance = (series_resistance_ohms*temp_voltage)/(V_in-temp_voltage);
   
   return temp_resistance; 
-}
+
 
 
 float calculate_temperature_C(float temp_resistance){
-
-  // Convert resistance to temperature
+  
+  // This function takes the thermistor resistance value as its only input argument
+  
+  // We convert resistance to temperature using the B-parameter equation
   
   float temp_C = (1/(((0.003354016434681)-((0.0002531645569620253)*log(10000)))+((0.0002531645569620253)*log(temp_resistance))))-273.15;
 
