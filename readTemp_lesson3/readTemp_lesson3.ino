@@ -2,6 +2,10 @@
  * Part of series:
  * Introduction to Arduino for Scientists
  * Developed by Dr. Paul Leary, and Dr. Natalie Low
+ * 
+ * Lesson 3 - Converting a digital reading from a sensor to a physical sensor property (resistance)
+ * 
+ * 
  */
 
 int temperaturePin = A0; 
@@ -75,8 +79,6 @@ float calculate_resistance(int temp_analog, float series_resistance_ohms, float 
     // Now we calculate the resistance of the thermistor
 
     float temp_resistance = (series_resistance_ohms*temp_voltage)/(V_in-temp_voltage);
-
-  // float temp_resistance = (resolution_conversion*series_resistance_ohms*(float)temp_analog)/(V_in-(resolution_conversion*(float)temp_analog));
   
   return temp_resistance; 
   
