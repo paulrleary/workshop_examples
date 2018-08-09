@@ -70,7 +70,7 @@ float calculate_resistance(int temp_analog, float series_resistance_ohms, float 
 
     // Here we calculate the ADC pin voltage from the digital value we have.
     
-    float temp_voltage = (5/1023)*(float)temp_analog;
+    float temp_voltage = 0.004887586*(float)temp_analog;
 
     // Now we calculate the resistance of the thermistor
 
