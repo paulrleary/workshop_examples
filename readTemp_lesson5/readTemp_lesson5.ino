@@ -32,6 +32,10 @@ void setup() {
   // while serial communication is happening
   Serial.begin(9600);  
 
+  // Define the fanPin as an digital output pin
+  // This will allow us to use the digitalWrite() function to control the fan from this pin 
+  pinMode(fanPin, OUTPUT);
+
 }
 
 
@@ -48,8 +52,7 @@ void loop() {
    float temperature_C = calculate_temperature_C(temperature_resistance_ohms);
 
    // We define a temperature setpoint, above which we want our fan to turn on
-   float setpoint_C = 30.0;
-
+    float setpoint_C = 30;
      
    // We define a BOOLEAN (true/false) variable to compare the current temperature to our setpoint
    // fanState is TRUE if current temperature is higher than the setpoint (i.e., we want to turn on the fan and cool down!)  
@@ -66,8 +69,7 @@ void loop() {
     }
 
 
-  // Turn the fan on or off, based on the fanState variable that we defined earlier
-  digitalWrite(fanPin, fanState);
+  
   
 
   Serial.print("Temperature = ");
@@ -85,9 +87,11 @@ void loop() {
   Serial.print("  Fan = ");
   Serial.print(fanString);
   Serial.println();
-  
 
-  delay(500);
+  // Turn the fan on or off, based on the fanState variable that we defined earlier
+  digitalWrite(fanPin, fanState);
+
+  delay(1000);
 
 }
 
