@@ -4,7 +4,7 @@
  * Developed by Dr. Paul Leary, and Dr. Natalie Low
 
 
-  Lesson 4 - Calculating a useful temperature reading  from the  sensor's electrical property (resistance)
+  Lesson 4 - Calculating a useful temperature reading from the sensor's electrical property (resistance)
 
   We have successfully converted the digital values from the ADC to an actual physical property of the 
   thermistor (resistance). Now we want to convert the thermistor's resistance to a temperature (which is the 
@@ -86,6 +86,8 @@ float calculate_resistance(int temp_analog, float series_resistance_ohms, float 
     float temp_resistance = (series_resistance_ohms*temp_voltage)/(V_in-temp_voltage);
   
   return temp_resistance; 
+  
+}
 
 
 

@@ -76,10 +76,6 @@ void loop() {
     fanString = "On";
     }
 
-
-  
-  
-
   Serial.print("Temperature = ");
   Serial.print(temperature_C);
   Serial.write(0xC2);
@@ -103,7 +99,8 @@ void loop() {
 
 }
 
-//FUNCTION declaration has form: RETURN TYPE  function_name((TYPE) INPUT ARGUMENTS)
+// These are the functions used in the loop() block
+// FUNCTION declaration has form: RETURN TYPE  function_name((TYPE) INPUT ARGUMENTS)
 
 int read_temp_avg(int pin, int samples){
 

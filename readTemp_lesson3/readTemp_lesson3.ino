@@ -48,6 +48,8 @@ void loop() {
 
 }
 
+
+// These are the functions used in the loop() block
 //FUNCTION declaration has form: RETURN TYPE  function_name((TYPE) INPUT ARGUMENTS)
 
 int read_temp_avg(int pin, int samples){
