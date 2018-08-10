@@ -87,7 +87,7 @@ float calculate_temperature_C(float temp_resistance){
 
 float knob2temp_C(int temp_analog){
   float temp_min = 20;
-  float temp_max = 30;
+  float temp_max = 36;
 
   float set_temp_C = temp_min + ((temp_max - temp_min)/1024)*temp_analog;
   return set_temp_C;
