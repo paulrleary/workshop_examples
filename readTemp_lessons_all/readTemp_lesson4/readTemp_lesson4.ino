@@ -43,8 +43,8 @@ void loop() {
   // Print the temperature to the serial monitor so we can see it
   Serial.print("Temperature = ");
   Serial.print(temperature_C);
-  Serial.write(0xC2);
-  Serial.write(0xB0);
+  Serial.write(0xC2); //These 2 lines allow us to print the ° symbol. If you are curious,
+  Serial.write(0xB0); //they involve calling a special character directly from the ASCII table http://www.asciitable.com/
   Serial.print("C ");
   Serial.println();
   
