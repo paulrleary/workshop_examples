@@ -17,7 +17,7 @@
 
 // DECLARE a global variable to store the pin number of the pin we will use to read temperature 
 // We use an analog pin to read the thermistor
-int temperaturePin = A0; .
+int temperaturePin = A0; 
 
 
 
@@ -48,7 +48,7 @@ void loop() {
   Serial.println();
 
   // And last, we delay for 500 ms.  Otherwise these commands would execute as fast as the Arduino could possibly run.
-  delay(500);
+//  delay(500);
 
 }
 
