@@ -6,7 +6,7 @@ elapsedMicros time;
 
 int pedestal = 32767+9000;
 int BUFFER_SIZE = 7500;
-int SAMPLE_FREQ_HZ = 5000;
+int SAMPLE_FREQ_HZ = 10000;
 
 const uint8_t ANALOG_COUNT = 2;
 int StartPIN = A2; // select ADC channels
