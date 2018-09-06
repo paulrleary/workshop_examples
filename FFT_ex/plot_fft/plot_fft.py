@@ -85,7 +85,7 @@ d = DynamicUpdate()
 
 #  initialize serial port
 # '''do serial stuff here'''
-ser = serial.Serial('/dev/cu.usbmodem166', 500000, timeout=0.1, xonxoff=False, rtscts=False, dsrdtr=False) #Tried with and without the last 3 parameters, and also at 1Mbps, same happens.
+ser = serial.Serial('/dev/cu.usbmodem3056451', 500000, timeout=0.1, xonxoff=False, rtscts=False, dsrdtr=False) #Tried with and without the last 3 parameters, and also at 1Mbps, same happens.
 ser.flushInput()
 ser.flushOutput()
 # assume that bins and mags are the returned by the fft via serial
@@ -112,12 +112,12 @@ for i in range(0,100000):
     # power = data[5]
     bins = np.linspace(0, samplerate / 2, fft_size / 2)
 
-    mags = data[2:]
+    mags = data[2:-1]
     length = len(mags)
     # if (length/2) % 2 == 0:
 
     try:
-        mags = 20*np.log10(mags)
+        # mags = 20*np.log10(mags)
         if len(mags) == len(bins):
             # x = time() - tstart
             # mags =0.01* np.sin(x*0.1+0.35)*bins
