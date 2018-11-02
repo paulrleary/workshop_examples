@@ -4,6 +4,9 @@
 
 #include <ADC.h>
 #include <arm_math.h>  //Important math library, which will be used frequently in this course.  reference: http://www.keil.com/pack/doc/cmsis/DSP/html/modules.html
+#include <Adafruit_NeoPixel.h>
+
+#include "firCoeffs.h"
 
 const int readPin1 = A2;
 const int readPin2 = A3;
@@ -13,13 +16,15 @@ int pedestal;
 ADC *adc = new ADC(); // adc object
 
 int BUFFER_SIZE = 256;  
-int SAMPLE_FREQ_HZ = 8*44800;
+int SAMPLE_FREQ_HZ = 44800;
 
 float *samples_a0;      //  samples od a0 channel
 float *samples_a1;      //  samples of q1 channel
 int sample_index;
 
 arm_cfft_radix4_instance_f32 fft; //This is the fft object from arm_math.h which we will use to compute FFTs.  Please see 
+arm_fir_instance_f32 bpS;
+
 
 float *samples_a0_mag;    //These will store our FFT magnitudes
 float *samples_a1_mag;
@@ -40,7 +45,20 @@ IntervalTimer samplingTimer;
 
 elapsedMicros time;
 
+int NeoPixel_pin = 6;
+Adafruit_NeoPixel ring = Adafruit_NeoPixel(24, NeoPixel_pin, NEO_GRB + NEO_KHZ800);
+
+int freq_idx;
+
+// float32_t *fir_out_a0;
+//   float32_t *fir_out_a1;
+
+  
+
+
 void setup() {
+// fir_out_a0 = (float*)malloc(2*4*BUFFER_SIZE);
+//   fir_out_a1 = (float*)malloc(2*4*BUFFER_SIZE);
 
     pinMode(LED_BUILTIN, OUTPUT);
     pinMode(readPin1, INPUT);
@@ -54,21 +72,39 @@ void setup() {
 
     create_frequency_vec();
 
+    freq_idx = get_frequency_index(1000);
+
     //This initializes our fft object: http://www.keil.com/pack/doc/cmsis/DSP/html/group__ComplexFFT.html#gac9565e6bc7229577ecf5e090313cafd7
     arm_cfft_radix4_init_f32(&fft, BUFFER_SIZE, 0, 1); 
-    
+    arm_fir_init_f32(&bpS, NUM_TAPS,(float32_t*)&firCoeffs[0],&bp_firState[0],BLOCK_SIZE);
+
     samplingBegin();  
+    ring.begin();
+    ring.show();
+
 }
 
 
 ADC::Sync_result result;
 
+int color = ring.Color(0,50,0);
+int pixel = 0;
+
 void loop() {
   String datastr = "";
   if (samplingIsDone())
       { 
+        // bpFilter();
+        for (int i = 0; i<2*BUFFER_SIZE; i++){
+          Serial.print((String)*(samples_a0+i) + ',');
+          // Serial.println((String)*(fir_out_a0+2*i) + ',');
+        }
+        Serial.println();
+
         /* x-Correlation*/
         crossCorrelate();
+
+        runFFT();
 
 
         float dt_ms = 1/(0.001*SAMPLE_FREQ_HZ);
@@ -78,7 +114,17 @@ void loop() {
         float d = 0.104;
         float phi = asin((tau*c_ms)/d)*180/PI;
 
-        Serial.println(phi);
+        // int idx = get_frequency_index(1000);
+        // Serial.println(*(samples_a0_mag+freq_idx));
+
+        // Serial.println(phi);
+
+        int prev_pixel = pixel;
+        pixel = pixelAngle(phi);
+        ring.setPixelColor(prev_pixel, 0);
+        ring.setPixelColor(pixel,color);
+        ring.show();
+        
         delay(20); 
         
         // print xcorr data to serial_plotter
@@ -168,13 +214,14 @@ void create_frequency_vec()
 {
   float df = SAMPLE_FREQ_HZ/BUFFER_SIZE;
   
-  for(int i = 1; i<=BUFFER_SIZE; i++){
+  for(int i = 0; i<BUFFER_SIZE; i++){
     *(freqs + i) = df*i;
   }
 }
 
 int get_frequency_index(float input_freq)
-{
+{ 
+
   float32_t* freq_temp;
   float32_t minval;
   uint32_t idx;
@@ -186,7 +233,12 @@ int get_frequency_index(float input_freq)
   arm_offset_f32(freq_temp, -1*input_freq, freq_temp, BUFFER_SIZE);
   arm_abs_f32(freq_temp, freq_temp, BUFFER_SIZE);
   arm_min_f32(freq_temp, BUFFER_SIZE, &minval, &idx);
-
+  // Serial.println(*(freqs+idx+1));
+  // for (int i = 0; i<BUFFER_SIZE; i++){
+  //   Serial.print(*(freqs +i));
+  //   Serial.print(",");
+  // }
+  // Serial.println();
   free(freq_temp);
 
   return idx;
@@ -241,6 +293,27 @@ boolean samplingIsDone()
 ///////////////////////////////////////////////////////////////////////////////
 // X-correlation FUNCTIONS
 ///////////////////////////////////////////////////////////////////////////////
+void bpFilter(){
+  float32_t *fir_out_a0;
+  float32_t *fir_out_a1;
+
+  fir_out_a0 = (float*)malloc(2*4*BUFFER_SIZE);
+  fir_out_a1 = (float*)malloc(2*4*BUFFER_SIZE);
+
+  Serial.println("hello");
+
+  for(int i=0; i<BLOCK_SIZE; i++){
+  arm_fir_f32(&bpS, samples_a0+2*i, fir_out_a0+2*i, 2*BLOCK_SIZE);
+  arm_fir_f32(&bpS, samples_a1+2*i, fir_out_a1+2*i, 2*BLOCK_SIZE);
+  }
+  Serial.println("hello2");
+  arm_copy_f32(fir_out_a0, samples_a0, 2*BUFFER_SIZE);
+  arm_copy_f32(fir_out_a1, samples_a1, 2*BUFFER_SIZE);
+
+  free(fir_out_a0);
+  free(fir_out_a1);
+}
+
 void crossCorrelate()
 {
   /* xCorr A2&A3 and normalization of centered data*/ 
@@ -262,6 +335,23 @@ void crossCorrelate()
 
   /* Peak finding*/
   arm_max_f32(xcorr_output, 2 * BUFFER_SIZE, peakResult, peakIndex);
+}
+
+void runFFT()
+{
+  float32_t* fft_temp;
+  float32_t minval;
+  uint32_t idx;
+  
+  fft_temp  =  (float*)malloc(2*4*BUFFER_SIZE);
+  
+  arm_copy_f32(samples_a0, fft_temp, 2*BUFFER_SIZE);
+  arm_cfft_radix4_f32(&fft, fft_temp);
+  arm_cmplx_mag_f32(fft_temp, samples_a0_mag, BUFFER_SIZE);
+
+  free(fft_temp);
+
+
 }
 
 String pythonXCorr()
@@ -297,4 +387,9 @@ String printXCorr()
           return tmpstr;
   }// end of printXcorr
 
+int pixelAngle(int angle){
 
+  int pixel = angle*24/360;
+  pixel+=12;
+  return pixel;
+}
