@@ -1,0 +1,3 @@
+[submodule "FFT_ex/FFT_ex/Live-Specgram"]
+	path = FFT_ex/FFT_ex/Live-Specgram
+	url = https://github.com/ayared/Live-Specgram.git

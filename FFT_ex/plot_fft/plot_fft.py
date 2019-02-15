@@ -85,7 +85,9 @@ for i in range(0,100000):
     samplerate = data[1]
 
     bins = np.linspace(0, samplerate / 2, fft_size / 2)
-    bins = bins[:-1]
+
+    bins = bins[1:]
+
     mags = data[2:-1]
     length = len(mags)
 
