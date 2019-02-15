@@ -20,7 +20,7 @@ Adafruit_NeoPixel ring = Adafruit_NeoPixel(60, PIN, NEO_GRB + NEO_KHZ800);
 
 //int pedestal = 512;
 
-int pedestal = 32767+10000;
+//int pedestal = 32767+10000;
 //int pedestal = 0;
 
 
@@ -36,9 +36,9 @@ int EndPIN = A3;
  * ADC SAMPLING PARAMETERS
  */
 unsigned N; // 2^6=64 "window size" of the moving average filter; DOES NOT affect theh sampling delay
-int resolution = 16; //Teensy - 16 bit
+int resolution = 12; //Teensy - 16 bit
 int M = 32; // number of samples in burst averaging; DOES affect the sampling delay
-
+int pedestal = pow(2, resolution)/2;
 
 float *samples_a0;
 float *samples_a1;

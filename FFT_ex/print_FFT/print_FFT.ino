@@ -29,7 +29,7 @@ ADC::Sync_result result;
 uint16_t estimate[2] = {};
 
 void setup() {
-  Serial.begin(500000);
+  Serial.begin(250000);
 
   initialize_adc();
 
@@ -56,6 +56,7 @@ void loop() {
           datastr += ("," +String(*(mags_a1+i)));
         }
         Serial.println(datastr);
+//         delay(10);
 
         interrupts();
         samplingBegin();

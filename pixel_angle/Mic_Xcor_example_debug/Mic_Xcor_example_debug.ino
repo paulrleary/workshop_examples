@@ -9,7 +9,7 @@ elapsedMicros time;
 //IntervalTimer dhtTimer;
 IntervalTimer samplingTimer;
 
-int pedestal = 32767+10000;
+
 
 /*
  * ADC CONFIGURATION VARIABLES
@@ -23,8 +23,10 @@ int EndPIN = A3;
  * ADC SAMPLING PARAMETERS
  */
 unsigned N; // 2^6=64 "window size" of the moving average filter; DOES NOT affect theh sampling delay
-int resolution = 16; //Teensy - 16 bit
+int resolution = 12; //Teensy - 16 bit
 int M = 32; // number of samples in burst averaging; DOES affect the sampling delay
+
+int pedestal = pow(2, resolution)/2;
 
 float *samples_a0;
 float *samples_a1;
@@ -87,7 +89,7 @@ void loop() {
       String datastr;
 
       bool printxcor = 0;
-      bool printAngle = 0;
+      bool printAngle = 1;
       bool print2analog =0;
 
       bool printa0 = 0;
@@ -97,7 +99,7 @@ void loop() {
 //      bool print2analog =0;
 
       bool printmax = 0;
-      bool printmaxindex = 1;
+      bool printmaxindex = 0;
       
        
       arm_correlate_f32(samples_a0, BUFFER_SIZE, samples_a1, BUFFER_SIZE, xcor_sig); //look more into allocatememory();
