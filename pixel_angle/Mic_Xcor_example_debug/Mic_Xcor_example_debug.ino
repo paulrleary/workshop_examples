@@ -87,7 +87,7 @@ void loop() {
       String datastr;
 
       bool printxcor = 0;
-      bool printAngle = 0;
+      bool printAngle = 1;
       bool print2analog =0;
 
       bool printa0 = 0;
@@ -97,7 +97,7 @@ void loop() {
 //      bool print2analog =0;
 
       bool printmax = 0;
-      bool printmaxindex = 1;
+      bool printmaxindex = 0;
       
        
       arm_correlate_f32(samples_a0, BUFFER_SIZE, samples_a1, BUFFER_SIZE, xcor_sig); //look more into allocatememory();
