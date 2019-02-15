@@ -63,7 +63,7 @@ d = DynamicUpdate()
 #  initialize serial port
 
 
-ser = serial.Serial('/dev/cu.usbmodem3056451', 500000, timeout=0.1, xonxoff=False, rtscts=False, dsrdtr=False) #Tried with and without the last 3 parameters, and also at 1Mbps, same happens.
+ser = serial.Serial('/dev/cu.usbmodem3056450', 500000, timeout=0.1, xonxoff=False, rtscts=False, dsrdtr=False) #Tried with and without the last 3 parameters, and also at 1Mbps, same happens.
 
 ser.flushInput()
 ser.flushOutput()
@@ -85,6 +85,7 @@ for i in range(0,100000):
     samplerate = data[1]
 
     bins = np.linspace(0, samplerate / 2, fft_size / 2)
+
     bins = bins[1:]
 
     mags = data[2:-1]
