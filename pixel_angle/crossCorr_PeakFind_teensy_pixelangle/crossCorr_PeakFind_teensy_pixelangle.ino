@@ -95,11 +95,11 @@ void loop() {
   if (samplingIsDone())
       { 
         // bpFilter();
-        for (int i = 0; i<2*BUFFER_SIZE; i++){
-          Serial.print((String)*(samples_a0+i) + ',');
-          // Serial.println((String)*(fir_out_a0+2*i) + ',');
-        }
-        Serial.println();
+//        for (int i = 0; i<2*BUFFER_SIZE; i++){
+//          Serial.print((String)*(samples_a0+i) + ',');
+//          // Serial.println((String)*(fir_out_a0+2*i) + ',');
+//        }
+//        Serial.println();
 
         /* x-Correlation*/
         crossCorrelate();
@@ -118,7 +118,7 @@ void loop() {
         // Serial.println(*(samples_a0_mag+freq_idx));
 
         // Serial.println(phi);
-
+        Serial.println(phi);
         int prev_pixel = pixel;
         pixel = pixelAngle(phi);
         ring.setPixelColor(prev_pixel, 0);

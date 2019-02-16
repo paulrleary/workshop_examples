@@ -74,24 +74,13 @@ int servoUpdateTime = 1000000;
 Servo myServo;
 
 bool enableServo = 0;
-
+//int pixel;
 void setup() {
   Serial.begin(9600);
   delay(1000);
 
 //  pinMode(
 
-  if(enableServo){
-    myServo.attach(servoPin);
-  servoPosition = 0;
-  myServo.write(servoPosition);
-  delay(1000);
-  servoTime = time;
-   myServo.detach();
-//  Serial.println("hi");
-  }
-  
-  
   
   initialize_adc();
 
@@ -118,6 +107,9 @@ void setup() {
 
   
   }
+
+  int color = ring.Color(0,50,0);
+int pixel = 0;
 
 void loop() {
    
@@ -160,35 +152,13 @@ void loop() {
 //      float prevAngle = angle;
       calcAngle();
 //      Serial.println(angle);
+//
+//      pixel = pixelAngle(phi);
+//        ring.setPixelColor(prev_pixel, 0);
+//        ring.setPixelColor(pixel,color);
+//        ring.show()
 
-      if(enableServo){
-//      if((angle != prevAngle) &&(time - servoTime>=servoUpdateTime)){
-      if((time - servoTime>=servoUpdateTime)){
-//        Serial.print("hi,");
-////        Serial.print(time - servoTime);
-////        Serial.print(",");
-//        Serial.print(angle);
-//        Serial.print(",");
-//        Serial.println((int)angle);
-        int localangle = (int)angle;
-        myServo.attach(servoPin);
-        myServo.write(localangle);
-        servoTime = time;
-        Serial.println(localangle);
-        delay(100);
-        myServo.detach();
-
-//        servoTime = time;
-//        Serial.print("hi,");
-//        Serial.print(angle);
-//        Serial.print(",");
-//        Serial.println((int)angle);
-//          myServo.write(90);
-          
         
-        }
-       }
-
        if(printmax){
         Serial.println(*xcor_maxvalue);
        }
@@ -210,19 +180,16 @@ void loop() {
       }
 
       if(printAngle){
-      Serial.println(angle);
-      int pixel = pixelAngle(angle);
-      for(int i = 0; i<24; i++){
-        if(i==pixel){
-           ring.setPixelColor(i, ring.Color(0, 0, 10));
-        }
-        else{
-          ring.setPixelColor(i, 0);
-        }
-      }
-      ring.show();
-      }
+      int prev_pixel = pixel;
+      pixel = pixelAngle(angle);
+      Serial.println(String(prev_pixel)+","+String(pixel)+","+String(angle)+",");
       
+        ring.setPixelColor(prev_pixel, 0);
+        ring.setPixelColor(pixel,color);
+        ring.show();
+        delay(10);
+      }
+      /*
       if(print2analog)
       {
         datastr = "";
@@ -368,24 +335,12 @@ void loop() {
       }
       Serial.println();
       }
+*/
 
-//      Serial.println();
-//      Serial.println();
-      
-//  Serial.println(datastr);
         interrupts();
-//        beginMicTimer();
   samplingBegin();
       }
 
-
-
-//      if(millis()>5000) //Stop everything after 10s
-//      {
-//        sample_index = 0;
-//        samplingTimer.end();
-//        dhtTimer.end();
-//      }
 
 }
 
@@ -424,13 +379,13 @@ void calcAngle()
 { 
   const float Pi = 3.14159265359;
 
-  float currentangle  = (90 - acos(TDOA*Vs/D)*180/Pi)+90; // Need so spend more time with this calculation, and would prefer to use arm_math, but does not have acos.  Perhaps implement lookup table
+  float currentangle  = acos(TDOA*Vs/D)*180/Pi; // Need so spend more time with this calculation, and would prefer to use arm_math, but does not have acos.  Perhaps implement lookup table
 //  Serial.println(currentangle);
   float prevangle = angle;
 //  Serial.println(prevangle);
 //  int shift = 2;
 //angle = 90;
-  float alpha = 0.01;
+  float alpha = 0.1;
 //Serial.println(alpha, 8);
 //Serial.println(alpha*(currentangle - prevangle),8);
   angle = prevangle+alpha*(currentangle - prevangle);
@@ -606,7 +561,7 @@ boolean samplingIsDone()
 
 int pixelAngle(int angle){
 
-  int pixel = (angle)*24/360;
+  int pixel = (angle)*24/360+6;
   return pixel;
 }
 
