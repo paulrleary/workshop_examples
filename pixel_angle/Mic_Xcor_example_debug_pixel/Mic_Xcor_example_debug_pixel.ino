@@ -151,7 +151,7 @@ void loop() {
 
 //      float prevAngle = angle;
       calcAngle();
-//      Serial.println(angle);
+      Serial.println(angle);
 //
 //      pixel = pixelAngle(phi);
 //        ring.setPixelColor(prev_pixel, 0);
@@ -179,16 +179,18 @@ void loop() {
 //      delay(100);
       }
 
-      if(printAngle){
-      int prev_pixel = pixel;
-      pixel = pixelAngle(angle);
-      Serial.println(String(prev_pixel)+","+String(pixel)+","+String(angle)+",");
-      
-        ring.setPixelColor(prev_pixel, 0);
-        ring.setPixelColor(pixel,color);
-        ring.show();
-        delay(10);
-      }
+//      if(printAngle){
+////      int prev_pixel = pixel;
+////      pixel = pixelAngle(angle);
+////      Serial.println(String(angle)+",");
+//       Serial.println(angle);
+////      Serial.println(String(prev_pixel)+","+String(pixel)+","+String(angle)+",");
+//      
+////        ring.setPixelColor(prev_pixel, 0);
+////        ring.setPixelColor(pixel,color);
+////        ring.show();
+////        delay(10);
+//      }
       /*
       if(print2analog)
       {
