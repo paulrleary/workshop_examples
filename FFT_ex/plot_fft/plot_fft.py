@@ -63,7 +63,7 @@ d = DynamicUpdate()
 #  initialize serial port
 
 
-ser = serial.Serial('/dev/cu.usbmodem3056450', 500000, timeout=0.1, xonxoff=False, rtscts=False, dsrdtr=False) #Tried with and without the last 3 parameters, and also at 1Mbps, same happens.
+ser = serial.Serial('/dev/cu.usbmodem4147671', 500000, timeout=0.1, xonxoff=False, rtscts=False, dsrdtr=False) #Tried with and without the last 3 parameters, and also at 1Mbps, same happens.
 
 ser.flushInput()
 ser.flushOutput()
@@ -99,7 +99,7 @@ for i in range(0,100000):
     except RuntimeWarning:
         print(mags)
 
-    sleep(0.001)
+##    sleep(0.001)
 
 
 if __name__ == '__main__':
